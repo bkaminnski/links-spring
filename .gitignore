@@ -1,0 +1,32 @@
+### Specific to links project ###
+/ci/postgres-dev/docker-entrypoint-initdb.d/*.sh
+/setup
+
+### Javascript ###
+node_modules
+npm-debug.log
+
+### Maven ###
+target
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+.nb-gradle/

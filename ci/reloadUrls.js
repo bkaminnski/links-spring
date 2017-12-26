@@ -10,3 +10,5 @@ new Command('.', 'docker rmi urls-service').execute();
 middlewareUp();
 
 print('Script finished after ' + (new Date().getTime() - timeStarted) + ' millis');
+
+new Command('.', 'docker logs -f urls-service').execute();

@@ -23,7 +23,8 @@ if ($dockerMachines -Like "*$machineName*") {
 
 	echo "Setting ports forwarding on Oracle VirtualBox machine..."
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "Postgres,tcp,,5432,,5432"
-	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "urls,tcp,,8001,,8080"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "eureka,tcp,,8761,,8761"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "urls,tcp,,8001,,8001"
 	echo "Setting ports forwarding finished."
 	echo ""
 }

@@ -5,10 +5,14 @@ load('./scripts-lib/command.js');
 
 function middlewareUp() {
 	var dockerImages = new DockerImages();
-	dockerImages.build('../sources/services/links/urls/service', 'urls-service', '', function () {
+	dockerImages.build('../sources/services/core/eureka/service/', 'eureka-service', '', function () {
+		new Command('../sources/services/core/eureka/service/', 'mvn clean install').execute();
+	});
+	dockerImages.build('../sources/services/links/urls/service/', 'urls-service', '', function () {
 		new Command('../sources/services/links/urls/service/', 'mvn clean install').execute();
 	});
 
 	var dockerContainers = new DockerContainers();
-	dockerContainers.run('urls-service', '-p 8080:8080 --network links urls-service --spring.datasource.password=urls');
+	dockerContainers.run('eureka-service', '-p 8761:8761 --network links eureka-service');
+	dockerContainers.run('urls-service', '-p 8001:8001 --network links urls-service --spring.datasource.password=urls');
 }

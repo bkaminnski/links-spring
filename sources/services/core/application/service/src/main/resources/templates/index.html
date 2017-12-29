@@ -1,0 +1,13 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>LinkLink</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="shortcut icon" href="app/glyphicons-51-link.png"/>
+</head>
+<body>
+<div id="applicationPage"></div>
+<script src="/app/vendor.bundle.js"></script>
+<script th:each="s : ${services}" th:src="@{/{serviceName}/app/app.js(serviceName=${s.name})}"></script>
+</body>
+</html>

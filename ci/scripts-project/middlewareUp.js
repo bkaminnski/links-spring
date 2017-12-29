@@ -4,6 +4,8 @@ load("./scripts-lib/docker.js");
 load('./scripts-lib/command.js');
 
 function middlewareUp() {
+	new Command('../sources/services/core/parent/', 'mvn install').execute();
+
 	var dockerImages = new DockerImages();
 	dockerImages.build('../sources/services/core/eureka/service/', 'eureka-service', '', function () {
 		new Command('../sources/services/core/eureka/service/', 'mvn clean install').execute();

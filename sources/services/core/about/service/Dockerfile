@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM spring-boot-service
 ADD ./target/about.jar app.jar
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
-EXPOSE 8002
+ENTRYPOINT ["/entrypoint.sh", "-jar", "/app.jar"]
+EXPOSE 8003 $JMX_PORT $DEBUG_PORT

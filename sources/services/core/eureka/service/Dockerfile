@@ -1,4 +1,4 @@
-FROM openjdk:8-jdk-alpine
+FROM spring-boot-service
 ADD ./target/eureka.jar app.jar
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app.jar"]
-EXPOSE 8761
+ENTRYPOINT ["/entrypoint.sh", "-jar", "/app.jar"]
+EXPOSE 8761 $JMX_PORT $DEBUG_PORT

@@ -7,26 +7,27 @@ function middlewareUp() {
 	new Command('../sources/services/core/parent/', 'mvn install').execute();
 
 	var dockerImages = new DockerImages();
-	dockerImages.build('../sources/services/core/eureka/service/', 'eureka-service', '', function () {
-		new Command('../sources/services/core/eureka/service/', 'mvn clean install').execute();
-	});
-	dockerImages.build('../sources/services/core/application/service/', 'application-service', '', function () {
-		new Command('../sources/services/core/application/service/', 'mvn clean install').execute();
-	});
-	dockerImages.build('../sources/services/links/urls/service/', 'urls-service', '', function () {
-		new Command('../sources/services/links/urls/service/', 'mvn clean install').execute();
-	});
-	dockerImages.build('../sources/services/core/menu-and-content/service/', 'menu-and-content-service', '', function () {
-		new Command('../sources/services/core/menu-and-content/service/', 'mvn clean install').execute();
-	});
-	dockerImages.build('../sources/services/core/about/service/', 'about-service', '', function () {
-		new Command('../sources/services/core/about/service/', 'mvn clean install').execute();
-	});
-
 	var dockerContainers = new DockerContainers();
-	dockerContainers.run('eureka-service', '-p 8761:8761 --network links eureka-service');
-	dockerContainers.run('application-service', '-p 8001:8001 --network links application-service');
-	dockerContainers.run('urls-service', '-p 8002:8002 --network links urls-service --spring.datasource.password=urls');
-	dockerContainers.run('menu-and-content-service', '-p 8003:8003 --network links menu-and-content-service');
-	dockerContainers.run('about-service', '-p 8004:8004 --network links about-service');
+
+	dockerImages.build('./docker/spring-boot-service/', 'spring-boot-service');
+
+	buildAndRun('eureka', '../sources/services/core/eureka/service/', 8761, 128);
+	buildAndRun('application', '../sources/services/core/application/service/', 8001, 128);
+	buildAndRun('menu-and-content', '../sources/services/core/menu-and-content/service/', 8002, 64);
+	buildAndRun('about', '../sources/services/core/about/service/', 8003, 64);
+	buildAndRun('urls', '../sources/services/links/urls/service/', 8012, 128, '--spring.datasource.password=urls');
+
+	function buildAndRun(serviceName, serviceDir, port, memoryMegabytes, serviceParameters) {
+		dockerImages.build(serviceDir, serviceName + '-service', '', function () {
+			new Command(serviceDir, 'mvn clean install').execute();
+		});
+		dockerContainers.run(serviceName + '-service',
+			'-p ' + port + ':' + port +
+			' --env JMX_PORT=1' + port + ' -p 1' + port + ':1' + port +
+			' --env DEBUG_PORT=2' + port + ' -p 2' + port + ':2' + port +
+			' --network links' +
+			' --env MEMORY_OPTS=-Xmx' + memoryMegabytes + 'm ' +
+			serviceName + '-service ' + serviceParameters
+		);
+	}
 }

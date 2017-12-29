@@ -8,6 +8,7 @@
 <body>
 <div id="applicationPage"></div>
 <script src="/app/vendor.bundle.js"></script>
+<script src="/app/app.js"></script>
 <script th:each="s : ${services}" th:src="@{/{serviceName}/app/app.js(serviceName=${s.name})}"></script>
 </body>
 </html>

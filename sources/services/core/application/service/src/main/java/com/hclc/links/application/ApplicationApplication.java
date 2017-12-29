@@ -38,7 +38,7 @@ class ServicesMvcController {
         this.discoveryClient = discoveryClient;
     }
 
-    @RequestMapping("/index.html")
+    @RequestMapping("/")
     public String services(Model model) {
         List<Service> services = discoveryClient.getServices().stream()
                 .map(s -> discoveryClient.getInstances(s))

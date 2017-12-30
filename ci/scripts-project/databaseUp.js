@@ -20,7 +20,7 @@ function runPostgresConfigured() {
 		waitForPostgresConfigured(dockerContainers);
 		runFlywayMigrations();
 	}
-	dockerContainers.run('postgres-configured', '-p 5432:5432 -e POSTGRES_PASSWORD=postgres --network links --network-alias urls-database postgres-configured', preDockerRun, postDockerRun);
+	dockerContainers.run('postgres-configured', '-p 5432:5432 -e POSTGRES_PASSWORD=postgres --network links --network-alias urls-database --network-alias keywords-database --network-alias descriptions-database postgres-configured', preDockerRun, postDockerRun);
 	waitForPostgresConfigured(dockerContainers);
 }
 
@@ -32,6 +32,8 @@ function runFlywayMigrations() {
 	buildFlywayConfigured();
 	buildFlywayMigrations();
 	new Command('./', 'docker run --rm --network links urls-flyway -url=jdbc:postgresql://urls-database:5432/urls -user=urls -password=urls migrate').execute();
+	new Command('./', 'docker run --rm --network links descriptions-flyway -url=jdbc:postgresql://descriptions-database:5432/descriptions -user=descriptions -password=descriptions migrate').execute();
+	new Command('./', 'docker run --rm --network links keywords-flyway -url=jdbc:postgresql://keywords-database:5432/keywords -user=keywords -password=keywords migrate').execute();
 }
 
 function buildFlywayConfigured() {
@@ -42,4 +44,6 @@ function buildFlywayConfigured() {
 function buildFlywayMigrations() {
 	var dockerImages = new DockerImages();
 	dockerImages.build('../sources/services/links/urls/flyway', 'urls-flyway');
+	dockerImages.build('../sources/services/links/descriptions/flyway', 'descriptions-flyway');
+	dockerImages.build('../sources/services/links/keywords/flyway', 'keywords-flyway');
 }

@@ -4,7 +4,8 @@ var timeStarted = new Date().getTime();
 
 load('./scripts-project/middlewareUp.js');
 
-new Command('.', 'docker rm -f eureka-service').execute();
+new Command('.', 'docker stop eureka-service').execute();
+new Command('.', 'docker rm eureka-service').execute();
 new Command('.', 'docker rmi eureka-service').execute();
 
 middlewareUp();

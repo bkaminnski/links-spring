@@ -40,10 +40,22 @@ if ($dockerMachines -Like "*$machineName*") {
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "about-jmx,tcp,,18003,,18003"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "about-debug,tcp,,28003,,28003"
 
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "links,tcp,,8011,,8011"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "links-jmx,tcp,,18011,,18011"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "links-debug,tcp,,28011,,28011"
+
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "urls,tcp,,8012,,8012"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "urls-jmx,tcp,,18012,,18012"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "urls-debug,tcp,,28012,,28012"
-	
+
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "descriptions,tcp,,8013,,8013"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "descriptions-jmx,tcp,,18013,,18013"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "descriptions-debug,tcp,,28013,,28013"
+
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "keywords,tcp,,8014,,8014"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "keywords-jmx,tcp,,18014,,18014"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "keywords-debug,tcp,,28014,,28014"
+
 	echo "Setting ports forwarding finished."
 	echo ""
 }

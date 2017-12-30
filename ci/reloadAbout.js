@@ -4,7 +4,8 @@ var timeStarted = new Date().getTime();
 
 load('./scripts-project/middlewareUp.js');
 
-new Command('.', 'docker rm -f about-service').execute();
+new Command('.', 'docker stop about-service').execute();
+new Command('.', 'docker rm about-service').execute();
 new Command('.', 'docker rmi about-service').execute();
 
 middlewareUp();

@@ -1,0 +1,4 @@
+FROM spring-boot-service
+ADD ./target/descriptions.jar app.jar
+ENTRYPOINT ["/entrypoint.sh", "-jar", "/app.jar"]
+EXPOSE 8013 $JMX_PORT $DEBUG_PORT

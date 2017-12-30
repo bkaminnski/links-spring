@@ -22,4 +22,4 @@ else
 	echo "MEMORY_OPTS: $MEMORY_OPTS"
 fi
 
-java $JAVA_OPTS $MEMORY_OPTS $@
+exec java $JAVA_OPTS $MEMORY_OPTS $@

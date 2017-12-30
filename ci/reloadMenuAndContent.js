@@ -4,7 +4,8 @@ var timeStarted = new Date().getTime();
 
 load('./scripts-project/middlewareUp.js');
 
-new Command('.', 'docker rm -f menu-and-content-service').execute();
+new Command('.', 'docker stop menu-and-content-service').execute();
+new Command('.', 'docker rm menu-and-content-service').execute();
 new Command('.', 'docker rmi menu-and-content-service').execute();
 
 middlewareUp();

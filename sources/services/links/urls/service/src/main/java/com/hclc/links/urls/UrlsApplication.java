@@ -46,7 +46,7 @@ class UrlsRestController {
         return urlsRepository.findAll();
     }
 
-    @RequestMapping(value = "/url", method = POST, consumes = "application/json")
+    @RequestMapping(value = "/urls", method = POST, consumes = "application/json")
     public ResponseEntity url(@RequestBody Url url) {
         urlsRepository.save(url);
         return ResponseEntity.noContent().build();

@@ -40,6 +40,10 @@ if ($dockerMachines -Like "*$machineName*") {
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "about-jmx,tcp,,18003,,18003"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "about-debug,tcp,,28003,,28003"
 
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "unique-ids,tcp,,8004,,8004"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "unique-ids-jmx,tcp,,18004,,18004"
+	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "unique-ids-debug,tcp,,28004,,28004"
+
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "links,tcp,,8011,,8011"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "links-jmx,tcp,,18011,,18011"
 	&"C:\Program Files\Oracle\VirtualBox\VBoxManage" controlvm "$machineName" natpf1 "links-debug,tcp,,28011,,28011"

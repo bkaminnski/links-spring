@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,6 +18,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
+import static org.springframework.data.domain.Sort.Direction.DESC;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -29,6 +31,7 @@ public class UrlsApplication {
 }
 
 interface UrlsRepository extends JpaRepository<Url, Long> {
+
 }
 
 @RestController
@@ -43,7 +46,7 @@ class UrlsRestController {
 
     @RequestMapping(value = "/urls", method = GET)
     public Collection<Url> urls() {
-        return urlsRepository.findAll();
+        return urlsRepository.findAll(new Sort(DESC, "id"));
     }
 
     @RequestMapping(value = "/urls", method = POST, consumes = "application/json")

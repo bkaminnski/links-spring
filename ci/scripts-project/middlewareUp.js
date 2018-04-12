@@ -9,8 +9,6 @@ function middlewareUp() {
 	var dockerImages = new DockerImages();
 	var dockerContainers = new DockerContainers();
 
-	dockerImages.build('./docker/spring-boot-service/', 'spring-boot-service');
-
 	buildAndRun('eureka', '../sources/services/core/eureka/service/', 8761, 128);
 	buildAndRun('application', '../sources/services/core/application/service/', 8001, 128);
 	buildAndRun('menu-and-content', '../sources/services/core/menu-and-content/service/', 8002, 64);

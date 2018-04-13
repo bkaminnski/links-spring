@@ -1,2 +1,2 @@
-FROM flyway-configured
+FROM bkaminnski/flyway-configured
 ADD ./sql/* /flyway/sql/

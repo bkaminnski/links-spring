@@ -29,16 +29,10 @@ function waitForPostgresConfigured(dockerContainers) {
 }
 
 function runFlywayMigrations() {
-	buildFlywayConfigured();
 	buildFlywayMigrations();
 	new Command('./', 'docker run --rm --network links urls-flyway -url=jdbc:postgresql://urls-database:5432/urls -user=urls -password=urls migrate').execute();
 	new Command('./', 'docker run --rm --network links descriptions-flyway -url=jdbc:postgresql://descriptions-database:5432/descriptions -user=descriptions -password=descriptions migrate').execute();
 	new Command('./', 'docker run --rm --network links keywords-flyway -url=jdbc:postgresql://keywords-database:5432/keywords -user=keywords -password=keywords migrate').execute();
-}
-
-function buildFlywayConfigured() {
-	var dockerImages = new DockerImages();
-	dockerImages.build('./docker/flyway-configured', 'flyway-configured');
 }
 
 function buildFlywayMigrations() {

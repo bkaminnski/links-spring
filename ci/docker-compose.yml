@@ -1,0 +1,87 @@
+version: '3'
+
+networks:
+  links_network:
+
+services:
+
+  postgres:
+    container_name: postgres
+    image: bkaminnski/postgres-initializable
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      # Databases to initialize separated by space. For each database "db user"="db name"="SERVICE_NAME". Format: SERVICE1_NAME;DB1_PASSWORD SERVICE2_NAME;DB2_PASSWORD ...
+      - INITIAL_DATABASES=urls;urls descriptions;descriptions keywords;keywords
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+      # netcat state check port
+      - "8333"
+    command: postgres
+    networks:
+      links_network:
+        aliases:
+          - urls-database
+          - descriptions-database
+          - keywords-database
+
+  flyway-urls:
+    build: ../sources/services/links/urls/flyway
+    container_name: flyway-urls
+    image: flyway-urls
+    environment:
+      # Databases to migrate with flyway. For each database "db user"="db name"="SERVICE_NAME". Format: SERVICE1_NAME;DB1_HOST;DB1_PORT;DB1_PASSWORD SERVICE2_NAME;DB2_HOST;DB2_PORT;DB2_PASSWORD ...
+      - DATABASES=urls;urls-database;5432;urls
+      # Waiting for each of the hosts to respond with expected string on given port. Format: HOST1;PORT1;EXPECTED_STRING1 HOST2;PORT2;EXPECTED_STRING2 ...
+      - WAIT_FOR=urls-database;8333;READY
+    expose:
+      # netcat state check port
+      - "8333"
+    command: migrateAll
+    networks:
+      links_network:
+        aliases:
+          - flyway-urls
+    depends_on:
+      - postgres
+
+  flyway-descriptions:
+    build: ../sources/services/links/descriptions/flyway
+    container_name: flyway-descriptions
+    image: flyway-descriptions
+    environment:
+      # Databases to migrate with flyway. For each database "db user"="db name"="SERVICE_NAME". Format: SERVICE1_NAME;DB1_HOST;DB1_PORT;DB1_PASSWORD SERVICE2_NAME;DB2_HOST;DB2_PORT;DB2_PASSWORD ...
+      - DATABASES=descriptions;descriptions-database;5432;descriptions
+      # Waiting for each of the hosts to respond with expected string on given port. Format: HOST1;PORT1;EXPECTED_STRING1 HOST2;PORT2;EXPECTED_STRING2 ...
+      - WAIT_FOR=descriptions-database;8333;READY
+    expose:
+      # netcat state check port
+      - "8333"
+    command: migrateAll
+    networks:
+      links_network:
+        aliases:
+          - flyway-descriptions
+    depends_on:
+      - postgres
+
+  flyway-keywords:
+    build: ../sources/services/links/keywords/flyway
+    container_name: flyway-keywords
+    image: flyway-keywords
+    environment:
+      # Databases to migrate with flyway. For each database "db user"="db name"="SERVICE_NAME". Format: SERVICE1_NAME;DB1_HOST;DB1_PORT;DB1_PASSWORD SERVICE2_NAME;DB2_HOST;DB2_PORT;DB2_PASSWORD ...
+      - DATABASES=keywords;keywords-database;5432;keywords
+      # Waiting for each of the hosts to respond with expected string on given port. Format: HOST1;PORT1;EXPECTED_STRING1 HOST2;PORT2;EXPECTED_STRING2 ...
+      - WAIT_FOR=keywords-database;8333;READY
+    expose:
+      # netcat state check port
+      - "8333"
+    command: migrateAll
+    networks:
+      links_network:
+        aliases:
+          - flyway-keywords
+    depends_on:
+      - postgres

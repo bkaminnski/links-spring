@@ -2,14 +2,12 @@
 
 var timeStarted = new Date().getTime();
 
-load('./scripts-project/middlewareUp.js');
+load('./scripts/command.js');
 
-new Command('.', 'docker stop application-service').execute();
-new Command('.', 'docker rm application-service').execute();
-new Command('.', 'docker rmi application-service').execute();
-
-middlewareUp();
+new Command('../sources/services/core/application/service/', 'mvn clean install').execute();
+new Command('.', 'docker-compose rm -sf application-service').execute();
+new Command('.', 'docker-compose up -d --build application-service').execute();
 
 print('Script finished after ' + (new Date().getTime() - timeStarted) + ' millis');
 
-new Command('.', 'docker logs -f application-service').execute();
+new Command('.', 'docker-compose logs -f application-service').execute();

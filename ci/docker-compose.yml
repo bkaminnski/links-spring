@@ -5,6 +5,108 @@ networks:
 
 services:
 
+  eureka-service:
+    build: ../sources/services/core/eureka/service
+    container_name: eureka-service
+    image: eureka-service
+    environment:
+      - JMX_PORT=18761
+      - DEBUG_PORT=28761
+      - MEMORY_OPTS=-Xmx128m
+    ports:
+      - "8761:8761"
+      - "18761:18761"
+      - "28761:28761"
+    networks:
+      links_network:
+        aliases:
+          - eureka-service
+
+  application-service:
+    build: ../sources/services/core/application/service
+    container_name: application-service
+    image: application-service
+    environment:
+      - JMX_PORT=18001
+      - DEBUG_PORT=28001
+      - MEMORY_OPTS=-Xmx128m
+    ports:
+      - "8001:8001"
+      - "18001:18001"
+      - "28001:28001"
+    networks:
+      links_network:
+        aliases:
+          - application-service
+
+  menu-and-content-service:
+    build: ../sources/services/core/menu-and-content/service
+    container_name: menu-and-content-service
+    image: menu-and-content-service
+    environment:
+      - JMX_PORT=18002
+      - DEBUG_PORT=28002
+      - MEMORY_OPTS=-Xmx64m
+    ports:
+      - "8002:8002"
+      - "18002:18002"
+      - "28002:28002"
+    networks:
+      links_network:
+        aliases:
+          - menu-and-content-service
+
+  about-service:
+    build: ../sources/services/core/about/service
+    container_name: about-service
+    image: about-service
+    environment:
+      - JMX_PORT=18003
+      - DEBUG_PORT=28003
+      - MEMORY_OPTS=-Xmx64m
+    ports:
+      - "8003:8003"
+      - "18003:18003"
+      - "28003:28003"
+    networks:
+      links_network:
+        aliases:
+          - about-service
+
+  unique-ids-service:
+    build: ../sources/services/core/unique-ids/service
+    container_name: unique-ids-service
+    image: unique-ids-service
+    environment:
+      - JMX_PORT=18004
+      - DEBUG_PORT=28004
+      - MEMORY_OPTS=-Xmx64m
+    ports:
+      - "8004:8004"
+      - "18004:18004"
+      - "28004:28004"
+    networks:
+      links_network:
+        aliases:
+          - unique-ids-service
+
+  links-service:
+    build: ../sources/services/links/links/service
+    container_name: links-service
+    image: links-service
+    environment:
+      - JMX_PORT=18011
+      - DEBUG_PORT=28011
+      - MEMORY_OPTS=-Xmx64m
+    ports:
+      - "8011:8011"
+      - "18011:18011"
+      - "28011:28011"
+    networks:
+      links_network:
+        aliases:
+          - links-service
+
   postgres:
     container_name: postgres
     image: bkaminnski/postgres-initializable
@@ -26,10 +128,10 @@ services:
           - descriptions-database
           - keywords-database
 
-  flyway-urls:
+  urls-flyway:
     build: ../sources/services/links/urls/flyway
-    container_name: flyway-urls
-    image: flyway-urls
+    container_name: urls-flyway
+    image: urls-flyway
     environment:
       # Databases to migrate with flyway. For each database "db user"="db name"="SERVICE_NAME". Format: SERVICE1_NAME;DB1_HOST;DB1_PORT;DB1_PASSWORD SERVICE2_NAME;DB2_HOST;DB2_PORT;DB2_PASSWORD ...
       - DATABASES=urls;urls-database;5432;urls
@@ -42,14 +144,36 @@ services:
     networks:
       links_network:
         aliases:
-          - flyway-urls
+          - urls-flyway
     depends_on:
       - postgres
 
-  flyway-descriptions:
+  urls-service:
+    build: ../sources/services/links/urls/service
+    container_name: urls-service
+    image: urls-service
+    environment:
+      - JMX_PORT=18012
+      - DEBUG_PORT=28012
+      - MEMORY_OPTS=-Xmx128m
+      # Waiting for each of the hosts to respond with expected string on given port. Format: HOST1;PORT1;EXPECTED_STRING1 HOST2;PORT2;EXPECTED_STRING2 ...
+      - WAIT_FOR=urls-flyway;8333;READY
+    ports:
+      - "8012:8012"
+      - "18012:18012"
+      - "28012:28012"
+    command: --spring.datasource.password=urls
+    networks:
+      links_network:
+        aliases:
+          - urls-service
+    depends_on:
+      - urls-flyway
+
+  descriptions-flyway:
     build: ../sources/services/links/descriptions/flyway
-    container_name: flyway-descriptions
-    image: flyway-descriptions
+    container_name: descriptions-flyway
+    image: descriptions-flyway
     environment:
       # Databases to migrate with flyway. For each database "db user"="db name"="SERVICE_NAME". Format: SERVICE1_NAME;DB1_HOST;DB1_PORT;DB1_PASSWORD SERVICE2_NAME;DB2_HOST;DB2_PORT;DB2_PASSWORD ...
       - DATABASES=descriptions;descriptions-database;5432;descriptions
@@ -62,14 +186,36 @@ services:
     networks:
       links_network:
         aliases:
-          - flyway-descriptions
+          - descriptions-flyway
     depends_on:
       - postgres
 
-  flyway-keywords:
+  descriptions-service:
+    build: ../sources/services/links/descriptions/service
+    container_name: descriptions-service
+    image: descriptions-service
+    environment:
+      - JMX_PORT=18013
+      - DEBUG_PORT=28013
+      - MEMORY_OPTS=-Xmx128m
+      # Waiting for each of the hosts to respond with expected string on given port. Format: HOST1;PORT1;EXPECTED_STRING1 HOST2;PORT2;EXPECTED_STRING2 ...
+      - WAIT_FOR=descriptions-flyway;8333;READY
+    ports:
+      - "8013:8013"
+      - "18013:18013"
+      - "28013:28013"
+    command: --spring.datasource.password=descriptions
+    networks:
+      links_network:
+        aliases:
+          - descriptions-service
+    depends_on:
+      - descriptions-flyway
+
+  keywords-flyway:
     build: ../sources/services/links/keywords/flyway
-    container_name: flyway-keywords
-    image: flyway-keywords
+    container_name: keywords-flyway
+    image: keywords-flyway
     environment:
       # Databases to migrate with flyway. For each database "db user"="db name"="SERVICE_NAME". Format: SERVICE1_NAME;DB1_HOST;DB1_PORT;DB1_PASSWORD SERVICE2_NAME;DB2_HOST;DB2_PORT;DB2_PASSWORD ...
       - DATABASES=keywords;keywords-database;5432;keywords
@@ -82,6 +228,28 @@ services:
     networks:
       links_network:
         aliases:
-          - flyway-keywords
+          - keywords-flyway
     depends_on:
       - postgres
+
+  keywords-service:
+    build: ../sources/services/links/keywords/service
+    container_name: keywords-service
+    image: keywords-service
+    environment:
+      - JMX_PORT=18014
+      - DEBUG_PORT=28014
+      - MEMORY_OPTS=-Xmx128m
+      # Waiting for each of the hosts to respond with expected string on given port. Format: HOST1;PORT1;EXPECTED_STRING1 HOST2;PORT2;EXPECTED_STRING2 ...
+      - WAIT_FOR=keywords-flyway;8333;READY
+    ports:
+      - "8014:8014"
+      - "18014:18014"
+      - "28014:28014"
+    command: --spring.datasource.password=keywords
+    networks:
+      links_network:
+        aliases:
+          - keywords-service
+    depends_on:
+      - keywords-flyway

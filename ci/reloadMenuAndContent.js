@@ -2,14 +2,12 @@
 
 var timeStarted = new Date().getTime();
 
-load('./scripts-project/middlewareUp.js');
+load('./scripts/command.js');
 
-new Command('.', 'docker stop menu-and-content-service').execute();
-new Command('.', 'docker rm menu-and-content-service').execute();
-new Command('.', 'docker rmi menu-and-content-service').execute();
-
-middlewareUp();
+new Command('../sources/services/core/menu-and-content/service/', 'mvn clean install').execute();
+new Command('.', 'docker-compose rm -sf menu-and-content-service').execute();
+new Command('.', 'docker-compose up -d --build menu-and-content-service').execute();
 
 print('Script finished after ' + (new Date().getTime() - timeStarted) + ' millis');
 
-new Command('.', 'docker logs -f menu-and-content-service').execute();
+new Command('.', 'docker-compose logs -f menu-and-content-service').execute();

@@ -2,14 +2,12 @@
 
 var timeStarted = new Date().getTime();
 
-load('./scripts-project/middlewareUp.js');
+load('./scripts/command.js');
 
-new Command('.', 'docker stop eureka-service').execute();
-new Command('.', 'docker rm eureka-service').execute();
-new Command('.', 'docker rmi eureka-service').execute();
-
-middlewareUp();
+new Command('../sources/services/core/eureka/service/', 'mvn clean install').execute();
+new Command('.', 'docker-compose rm -sf eureka-service').execute();
+new Command('.', 'docker-compose up -d --build eureka-service').execute();
 
 print('Script finished after ' + (new Date().getTime() - timeStarted) + ' millis');
 
-new Command('.', 'docker logs -f eureka-service').execute();
+new Command('.', 'docker-compose logs -f eureka-service').execute();

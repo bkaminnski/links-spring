@@ -2,13 +2,14 @@
 
 var timeStarted = new Date().getTime();
 
-load('./scripts-project/databaseUp.js');
+load('./scripts/command.js');
 
-new Command('.', 'docker rmi urls-flyway').execute();
-new Command('.', 'docker rmi flyway-configured').execute();
-new Command('.', 'docker rm -f postgres-configured').execute();
-new Command('.', 'docker rmi postgres-configured').execute();
+var containers = 'postgres urls-flyway descriptions-flyway keywords-flyway';
 
-databaseUp();
+new Command('.', 'docker-compose kill ' + containers).execute();
+new Command('.', 'docker-compose rm -f ' + containers).execute();
+new Command('.', 'docker-compose up -d --build ' + containers).execute();
 
 print('Script finished after ' + (new Date().getTime() - timeStarted) + ' millis');
+
+new Command('.', 'docker-compose logs -f ' + containers).execute();
